@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}User{% if user %} {{ user.id }}{% endif %}{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    {% if user %}
+    <h1 align="center">User{% if user %} {{ user.id }}{% endif %}</h1>
+    <br><br>
+
+    <table class="table table-striped">
+        <tr>
+            <th>Id</th>
+            <td>{{ user.id }}</td>
+        </tr>
+        <tr>
+            <th>Created</th>
+            <td>{{ user.creation_date }}</td>
+        </tr>
+    </table>
+    <br><br>
+    {% endif %}
+
+    {% if admin_surveys %}
+    <h1 align="center">Survey Admin</h1>
+    <br><br>
+
+    <table class="table table-striped">
+        <tr>
+            <th nowrap colspan="2">Survey</th>
+            <th>Teams</th>
+        </tr>
+        {% for survey in admin_surveys %}
+        <tr>
+            <th>{{ survey.id }}</th>
+            <td nowrap>
+                <div class="btn-group" role="group" aria-label="nav">
+                    <a href="{% url 'admin' survey_id=survey.id %}" class="btn btn-info" role="button">ADMIN</a>
+                    <a href="{% url 'bvc' survey_id=survey.id %}" class="btn btn-primary" role="button">BVC</a>
+                </div>
+            </td>
+            <td>
+            {% for team in survey.teams.all %}
+                <div class="btn-group" role="group" aria-label="nav">
+                    <a href="{% url 'submit' survey_id=survey.id team_name=team.team_name %}" class="btn btn-default" role="button">
+                        {{ team.pretty_team_name }}
+                    </a>
+                    <a href="{% url 'admin' survey_id=survey.id team_name=team.team_name %}" class="btn btn-info" role="button">ADMIN</a>
+                    <a href="{% url 'bvc' survey_id=survey.id team_name=team.team_name %}" class="btn btn-primary" role="button">BVC</a>
+                </div>
+                <br><br>
+            {% endfor %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+</div>
+
+{% endblock %}
